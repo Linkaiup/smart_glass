@@ -1,0 +1,18 @@
+tcp:
+  port: 10000
+boss:
+  thread:
+    count: 2
+worker:
+  thread:
+    count: 2
+so:
+  keepalive:  true
+  backlog: 100
+http:
+  maxTotal: 100
+  defaultMaxPerRoute: 20
+  connectTimeout: 1000
+  connectionRequestTimeout: 500
+  socketTimeout: 10000
+  staleConnectionCheckEnabled: true
