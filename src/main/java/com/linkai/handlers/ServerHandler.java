@@ -1,6 +1,11 @@
 package com.linkai.handlers;
 
+import com.google.gson.Gson;
+import com.linkai.model.AppResult;
+import com.linkai.model.BaiduResult;
+import com.linkai.model.GPRS;
 import com.linkai.service.impl.GetGprsDetailServiceImpl;
+import com.linkai.service.impl.HttpClientService;
 import com.linkai.util.NumberUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -10,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.TextMessage;
 
 import java.net.InetAddress;
 
@@ -26,10 +32,18 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     private static final Logger log = LoggerFactory.getLogger(ServerHandler.class);
 
+    private final Gson gson;
+    private final MyWebSocketHandler myWebSocketHandler;
     @Autowired
     private GetGprsDetailServiceImpl getGprsDetailService;
     @Autowired
     private NumberUtil numberUtil;
+
+    @Autowired(required = false)
+    public ServerHandler(Gson gson, MyWebSocketHandler myWebSocketHandler) {
+        this.gson = gson;
+        this.myWebSocketHandler = myWebSocketHandler;
+    }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg)
@@ -54,6 +68,10 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
             longitude = Float.parseFloat(lo[1]);
             latitude = Float.parseFloat(la[1]);
             result = getGprsDetailService.GetLocationString(longitude,latitude);
+            //发送给移动端的 GPRS 点
+            log.info("开始向移动端发送信息:+{0}",new AppResult<>(new GPRS(latitude,longitude)));
+            myWebSocketHandler.sendMessageToUser("gid",new TextMessage(gson.toJson(new AppResult<>(new GPRS(latitude,longitude)))));
+            log.info("向移动端发送信息成功");
         }else{
             result = "请求经纬度参数有误！请重新请求！";
         }

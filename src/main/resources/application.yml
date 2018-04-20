@@ -3,6 +3,8 @@ tcp:
 boss:
   thread:
     count: 2
+server:
+  port: 8888
 worker:
   thread:
     count: 2

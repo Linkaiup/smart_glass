@@ -8,4 +8,5 @@ package com.linkai.service;
  */
 public interface GetGprsDetailService {
     String GetLocationString(float longitude, float latitude) throws Exception;
+    boolean InsertGPRS(int date,float longitude,float latitude)throws Exception;
 }

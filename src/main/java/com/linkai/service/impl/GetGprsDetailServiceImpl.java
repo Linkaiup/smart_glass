@@ -1,6 +1,7 @@
 package com.linkai.service.impl;
 
 import com.google.gson.Gson;
+import com.linkai.handlers.MyWebSocketHandler;
 import com.linkai.model.BaiduResult;
 import com.linkai.service.GetGprsDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,12 @@ import java.util.Map;
 @Service
 public class GetGprsDetailServiceImpl implements GetGprsDetailService {
     private final HttpClientService httpClientService;
-    private Gson gson = new Gson();
+    private final Gson gson;
 
     @Autowired(required = false)
-    public GetGprsDetailServiceImpl(HttpClientService httpClientService) {
+    public GetGprsDetailServiceImpl(HttpClientService httpClientService,Gson gson) {
         this.httpClientService = httpClientService;
+        this.gson = gson;
     }
 
     @Override
@@ -45,5 +47,11 @@ public class GetGprsDetailServiceImpl implements GetGprsDetailService {
         }
         System.out.println(result);
         return result;
+    }
+
+    @Override
+    public boolean InsertGPRS(int date,float longitude,float latitude)throws Exception{
+
+        return true;
     }
 }

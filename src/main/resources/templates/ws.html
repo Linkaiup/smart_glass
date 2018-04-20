@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<!--注意这里使用了thymeleaf，具体的语法规则有兴趣的可以自己找一找相关的资料-->
+<html lang="en" xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Spring Boot WebSocket Group</title>
+</head>
+<body onload="disconnect()">
+<noscript><h2 style="color: #ff0000">貌似你的浏览器不支持WebSocket</h2></noscript>
+<div>
+    <div>
+        <button id="connect" onclick="connect();">连接</button>
+        <button id="disconnect" disabled="disabled" onclick="disconnect();">断开连接</button>
+    </div>
+    <div id="conversationDiv">
+        <label>输入你的名字</label><input type="text" id="message"/>
+        <button id="sendName" onclick="sendName();">发送</button>
+        <p id="response"></p>
+    </div>
+</div>
+​
+<script th:src="@{sockjs.min.js}"></script>
+<script th:src="@{stomp.min.js}"></script>
+<script th:src="@{jquery-1.12.3.js}"></script>
+<script type="text/javascript">
+    var stompClient = null;
+    function setConnected(connected){
+        document.getElementById('connect').disabled = connected;
+        document.getElementById('disconnect').disabled = !connected;
+        document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
+        $('#response').html();
+    }
+
+    //创建链接
+    function connect(){
+        var socket = new SockJS('/endpointMinuor'); //创建SockJS对象并且制定节点
+        stompClient = Stomp.over(socket);  //STOMP协议的WebSocket客户端
+        stompClient.connect({},function(frame){ //连接WebSocket服务端
+            setConnected(true);
+            console.log('Connected：' + frame);
+//订阅“/group/getResponse”目标发送的消息，和WsController类里say方法上的@SendTo注解对应
+            stompClient.subscribe('/group/getResponse',function(response){
+                showResponse(JSON.parse(response.body).content);
+            });
+        });
+    }
+    ​
+    //断开链接
+    function disconnect(){
+        if(stompClient != null){
+            stompClient.disconnect();
+        }
+        setConnected(false);
+        console.log("Disconnected");
+    }
+
+    //发送消息，和@MessageMapping注解的内容对应
+    function sendName(){
+        var message = $('#message').val();
+        stompClient.send("/welcome",{},JSON.stringify({'message':message}));
+    }
+    ​
+    //显示响应内容（订阅后接收的消息）
+    function showResponse(message){
+        var response = $("#response");
+        response.html(message);
+    }
+</script>
+</body>
+</html>
