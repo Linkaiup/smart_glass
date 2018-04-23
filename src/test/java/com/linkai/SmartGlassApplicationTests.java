@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.linkai.handlers.MyWebSocketHandler;
 import com.linkai.model.AppResult;
 import com.linkai.model.GPRS;
+import com.linkai.util.NumberUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,15 @@ public class SmartGlassApplicationTests {
 //		this.gson = gson;
 //	}
 
+	@Autowired
+	private NumberUtil numberUtil;
+
 	@Test
 	public void contextLoads() throws Exception{
 //		myWebSocketHandler.sendMessageToUser("gid",new TextMessage(gson.toJson(new AppResult<>(new GPRS(1.2,2.1)))));
-		System.out.println("yes");
+		String first[] = "lo:0.000000".split(":");
+		String second[] = "la:0.000000".split(":");
+		System.out.println(numberUtil.isDouble(first[1])&&numberUtil.isDouble(second[1]));
 	}
 
 }

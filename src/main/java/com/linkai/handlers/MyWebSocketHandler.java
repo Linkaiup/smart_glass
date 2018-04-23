@@ -42,7 +42,6 @@ public class MyWebSocketHandler implements WebSocketHandler {
     //在线用户列表
     private static final Map<String, WebSocketSession> users = new HashMap<>();
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(MyWebSocketHandler.class);
 
     //用户标识
     private static final String SESSION_USER = "gid";
@@ -61,7 +60,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
             users.put(SESSION_USER, session);
             session.sendMessage(new TextMessage("成功建立socket连接"));
         }
-        LOGGER.info("连接Socket通道数 >> : {}", users.size());
+        log.info("连接Socket通道数 >> : {}", users.size());
     }
 
     /**
@@ -69,7 +68,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
      */
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-        LOGGER.info("接受信息 >> {}", message.getPayload());
+        log.info("接受信息 >> {}", message.getPayload());
         if (message.getPayloadLength() == 0) {
             return;
         }
@@ -81,12 +80,12 @@ public class MyWebSocketHandler implements WebSocketHandler {
         try {
             request = gson.fromJson(message.getPayload().toString(), HashMap.class);
         } catch (Exception e) {
-            LOGGER.error("json转换异常 >> : {}", session.getId());
+            log.error("json转换异常 >> : {}", session.getId());
             return;
         }
         String get = (String) request.get("get");
         if (get == null) {
-            LOGGER.error("数据为空异常 >> : {}", session.getId());
+            log.error("数据为空异常 >> : {}", session.getId());
             return;
         }
     }
@@ -111,14 +110,14 @@ public class MyWebSocketHandler implements WebSocketHandler {
             try {
                 session.close();
             } catch (Exception e) {
-                LOGGER.error("连接关闭 >> : {}", session.getId());
+                log.error("连接关闭 >> : {}", session.getId());
             }
         }
         // 移除Socket会话
         for (Map.Entry<String, WebSocketSession> entry : users.entrySet()) {
             if (entry.getValue().getId().equals(session.getId())) {
                 users.remove(entry.getKey());
-                LOGGER.info("Socket会话异常移除:用户ID : {}", entry.getKey());
+                log.info("Socket会话异常移除:用户ID : {}", entry.getKey());
                 break;
             }
         }
@@ -135,7 +134,7 @@ public class MyWebSocketHandler implements WebSocketHandler {
         for (Map.Entry<String, WebSocketSession> entry : users.entrySet()) {
             if (entry.getValue().getId().equals(session.getId())) {
                 users.remove(entry.getKey());
-                LOGGER.info("Socket会话已经移除:用户ID : {}", entry.getKey());
+                log.info("Socket会话已经移除:用户ID : {}", entry.getKey());
                 break;
             }
         }

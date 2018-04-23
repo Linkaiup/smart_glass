@@ -10,6 +10,7 @@ import com.linkai.util.NumberUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.ChannelHandler.Sharable;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,9 @@ import java.net.InetAddress;
 @Component
 @Qualifier("serverHandler")
 @Sharable
+@Slf4j
 public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
-    private static final Logger log = LoggerFactory.getLogger(ServerHandler.class);
 
     private final Gson gson;
     private final MyWebSocketHandler myWebSocketHandler;
