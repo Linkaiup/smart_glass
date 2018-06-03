@@ -12,6 +12,8 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 public class AppResult<T> {
-    private T result;             // 交给移动端的数据
-
+    /**
+     * 交给移动端的数据
+     */
+    private T result;
 }

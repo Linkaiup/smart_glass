@@ -12,6 +12,17 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 public class GPRS {
-    private double latitude;         // 经度
-    private double longitude;         // 纬度
+    /**
+     * 纬度
+     */
+    private double latitude;
+    /**
+     * 经度
+     */
+    private double longitude;
+
+    /**
+     * 报警信息
+     */
+    private String info;
 }

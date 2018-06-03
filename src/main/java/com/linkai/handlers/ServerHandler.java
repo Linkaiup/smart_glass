@@ -57,24 +57,32 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
             //send to client
         System.out.println("服务端收到客户端发送过来的消息为： " + msg);
 
-        String value[] =msg.split(",");//开始切分字符串
-        System.out.println("lo="+value[0]);
-        System.out.println("la="+value[1]);
-        String lo[] = value[0].split(":");
-        String la[] = value[1].split(":");
-        float longitude;
-        float latitude;
         String result;
-        if(numberUtil.isDouble(lo[1])&&numberUtil.isDouble(la[1])){
-            longitude = Float.parseFloat(lo[1]);
-            latitude = Float.parseFloat(la[1]);
-            result = getGprsDetailService.GetLocationString(longitude,latitude);
-            //发送给移动端的 GPRS 点
-            log.info("开始向移动端发送信息:+{0}",new AppResult<>(new GPRS(latitude,longitude)));
-            myWebSocketHandler.sendMessageToUser("gid",new TextMessage(gson.toJson(new AppResult<>(new GPRS(latitude,longitude)))));
-            log.info("向移动端发送信息成功");
-        }else{
-            result = "请求经纬度参数有误！请重新请求！";
+        String help = "help";
+        if(!(help).equals(msg)) {
+            //开始切分字符串
+            String value[] = msg.split(",");
+            System.out.println("lo=" + value[0]);
+            System.out.println("la=" + value[1]);
+            String lo[] = value[0].split(":");
+            String la[] = value[1].split(":");
+            float longitude;
+            float latitude;
+            if (numberUtil.isDouble(lo[1]) && numberUtil.isDouble(la[1])) {
+                longitude = Float.parseFloat(lo[1]);
+                latitude = Float.parseFloat(la[1]);
+                result = getGprsDetailService.GetLocationString(longitude, latitude);
+                //发送给移动端的 GPRS 点
+                log.info("开始向移动端发送信息:+{0}", new AppResult<>(new GPRS(longitude, latitude,null)));
+                myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(longitude, latitude," ")))));
+                log.info("向移动端发送经纬度信息成功");
+            } else {
+                result = "请求经纬度参数有误！请重新请求！";
+            }
+        }else {
+            result = "报警成功！";
+            myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new AppResult<>(new GPRS(0.0, 0.0,"help"))))));
+            log.info("向移动端发送报警信息成功");
         }
         /**
          * 给客户端返回数据
