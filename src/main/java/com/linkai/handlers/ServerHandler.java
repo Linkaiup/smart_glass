@@ -11,8 +11,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.ChannelHandler.Sharable;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -61,7 +59,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         String help = "help";
         if(!(help).equals(msg)) {
             //开始切分字符串
-            String value[] = msg.split(",");
+            String[] value = msg.split(",");
             System.out.println("lo=" + value[0]);
             System.out.println("la=" + value[1]);
             String lo[] = value[0].split(":");
@@ -74,14 +72,14 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
                 result = getGprsDetailService.GetLocationString(longitude, latitude);
                 //发送给移动端的 GPRS 点
                 log.info("开始向移动端发送信息:+{0}", new AppResult<>(new GPRS(longitude, latitude,null)));
-                myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(longitude, latitude," ")))));
+                myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(longitude, latitude,"")))));
                 log.info("向移动端发送经纬度信息成功");
             } else {
                 result = "请求经纬度参数有误！请重新请求！";
             }
         }else {
             result = "报警成功！";
-            myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new AppResult<>(new GPRS(0.0, 0.0,"help"))))));
+            myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(23.066790, 113.3857,"help")))));
             log.info("向移动端发送报警信息成功");
         }
         /**

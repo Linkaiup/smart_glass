@@ -3,7 +3,7 @@ package com.linkai.model;
 import lombok.*;
 
 /**
- * Created by K Lin
+ * @author  K Lin
  * Date: 2018/4/16.
  * Time: 21:35
  * Remember to sow in the spring.
