@@ -2,15 +2,13 @@ package com.linkai.handlers;
 
 import com.google.gson.Gson;
 import com.linkai.model.AppResult;
-import com.linkai.model.BaiduResult;
 import com.linkai.model.GPRS;
 import com.linkai.service.ContactService;
 import com.linkai.service.impl.GetGprsDetailServiceImpl;
-import com.linkai.service.impl.HttpClientService;
 import com.linkai.util.NumberUtil;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.ChannelHandler.Sharable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

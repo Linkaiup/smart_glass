@@ -1,7 +1,5 @@
 package com.linkai;
 
-import com.google.gson.Gson;
-import com.linkai.service.ContactService;
 import com.linkai.service.impl.HttpClientService;
 import com.linkai.util.NumberUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +21,6 @@ public class SmartGlassApplicationTests {
 	private HttpClientService httpClientService;
 	@Autowired
 	private NumberUtil numberUtil;
-	@Autowired
-	private ContactService contactService;
-	Gson gson = new Gson();
 
 	@Test
 	public void contextLoads() throws Exception{

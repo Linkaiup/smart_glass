@@ -1,7 +1,6 @@
 package com.linkai.service;
 
 import com.linkai.dto.RequestResult;
-import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
