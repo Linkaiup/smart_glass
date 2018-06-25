@@ -1,6 +1,5 @@
 package com.linkai.handlers;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -8,8 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
-import javax.servlet.http.HttpSession;
-import javax.xml.transform.Source;
 import java.util.Map;
 
 /**
