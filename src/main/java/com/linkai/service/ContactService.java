@@ -39,4 +39,10 @@ public interface ContactService {
      * @return
      */
     RequestResult updatePersonToContact(Map<String,Object> map);
+
+    /**
+     * 群发短信通知
+     * @return
+     */
+    boolean sendWarning();
 }

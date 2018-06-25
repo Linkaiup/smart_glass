@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.linkai.model.AppResult;
 import com.linkai.model.BaiduResult;
 import com.linkai.model.GPRS;
+import com.linkai.service.ContactService;
 import com.linkai.service.impl.GetGprsDetailServiceImpl;
 import com.linkai.service.impl.HttpClientService;
 import com.linkai.util.NumberUtil;
@@ -35,6 +36,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     private final MyWebSocketHandler myWebSocketHandler;
     @Autowired
     private GetGprsDetailServiceImpl getGprsDetailService;
+    @Autowired
+    private ContactService contactService;
+
     @Autowired
     private NumberUtil numberUtil;
 
@@ -81,6 +85,11 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
             result = "报警成功！";
             myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(23.066790, 113.3857,"help")))));
             log.info("向移动端发送报警信息成功");
+            if (contactService.sendWarning()){
+                log.info("报警短信发送成功");
+            }else {
+                log.info("报警短信发送失败");
+            }
         }
         /**
          * 给客户端返回数据
