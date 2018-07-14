@@ -2,13 +2,17 @@ package com.linkai.handlers;
 
 import com.google.gson.Gson;
 import com.linkai.model.AppResult;
+import com.linkai.model.BaiduResult;
 import com.linkai.model.GPRS;
 import com.linkai.service.impl.GetGprsDetailServiceImpl;
+import com.linkai.service.impl.HttpClientService;
 import com.linkai.util.NumberUtil;
-import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.ChannelHandler.Sharable;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -34,6 +38,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
     @Autowired
     private GetGprsDetailServiceImpl getGprsDetailService;
     @Autowired
+    private ContactService contactService;
+
+    @Autowired
     private NumberUtil numberUtil;
 
     @Autowired(required = false)
@@ -57,7 +64,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         String help = "help";
         if(!(help).equals(msg)) {
             //开始切分字符串
-            String value[] = msg.split(",");
+            String[] value = msg.split(",");
             System.out.println("lo=" + value[0]);
             System.out.println("la=" + value[1]);
             String lo[] = value[0].split(":");
@@ -77,8 +84,13 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
             }
         }else {
             result = "报警成功！";
-            myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(0.0, 0.0,"help")))));
+            myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(23.066790, 113.3857,"help")))));
             log.info("向移动端发送报警信息成功");
+            if (contactService.sendWarning()){
+                log.info("报警短信发送成功");
+            }else {
+                log.info("报警短信发送失败");
+            }
         }
         /**
          * 给客户端返回数据
