@@ -1,5 +1,5 @@
 tcp:
-  port: 10000
+  port: 10001
 boss:
   thread:
     count: 2
