@@ -19,4 +19,25 @@ public interface LoginService {
      * @return RequestResult
      */
     RequestResult login(Map<String,String> map);
+
+    /**
+     * 根据电话生成验证码，并添加入缓存中，为后续匹配服务
+     * @param phone
+     * @return
+     */
+    RequestResult setPhoneAndAuthCode(String phone);
+
+    /**
+     * 通过电话和验证码进行匹配
+     * @param phone
+     * @param authCode
+     * @return
+     */
+    RequestResult compareAuthByPhone(String phone,String authCode);
+
+    /**
+     * 短信告知验证码
+     * @return
+     */
+    boolean sendAuthCode(String phone,String authCode);
 }

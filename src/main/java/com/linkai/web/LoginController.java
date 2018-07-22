@@ -27,11 +27,19 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-    @RequestMapping("/check")
-    public RequestResult login(@RequestBody  Map<String,String> map){
-        if (!map.containsKey("account") || !map.containsKey("password") || map.get("account") == null || map.get("password") == null){
+    @RequestMapping("/request")
+    public RequestResult requestAuthCode(@RequestBody  Map<String,String> map){
+        if (!map.containsKey("phone") || map.get("phone") == null){
             return new RequestResult(StateEnum.EMPTY);
         }
-        return loginService.login(map);
+        return loginService.setPhoneAndAuthCode(map.get("phone"));
+    }
+
+    @RequestMapping("/check")
+    public RequestResult login(@RequestBody  Map<String,String> map){
+        if (!map.containsKey("phone") || !map.containsKey("authCode") || map.get("phone") == null || map.get("authCode") == null){
+            return new RequestResult(StateEnum.EMPTY);
+        }
+        return loginService.compareAuthByPhone(map.get("phone"),map.get("authCode"));
     }
 }
