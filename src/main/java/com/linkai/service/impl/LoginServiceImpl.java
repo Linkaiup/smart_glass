@@ -53,21 +53,29 @@ public class LoginServiceImpl implements LoginService {
         }
     }
 
+    /**
+     * 根据电话号码生成验证码，并存入缓存中。用于后面比对
+     * @param phone
+     * @return
+     */
     @Override
     public RequestResult setPhoneAndAuthCode(String phone){
-        //更改在redis里面查看key编码问题
+        //如果电话号码为空
         if (phone == null){
             return new RequestResult(StateEnum.EMPTY);
         }
         //生成0-9999以内的随机数
         Random random = new Random();
         int r = random.nextInt(9999);
+        //将随机数转成字符串
         String authCode = String.valueOf(r);
         log.info("authCode is "+ authCode);
         sendAuthCode(phone,authCode);
+        //初始化redis集合
         RedisSerializer redisSerializer =new StringRedisSerializer();
         redisTemplate.setKeySerializer(redisSerializer);
         ValueOperations<String,Object> vo = redisTemplate.opsForValue();
+        //往redis集合中添加键值对
         vo.set(phone, authCode);
         return new RequestResult(StateEnum.OK);
     }
