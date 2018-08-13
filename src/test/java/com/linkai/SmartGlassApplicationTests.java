@@ -29,14 +29,7 @@ public class SmartGlassApplicationTests {
 		String second[] = "la:0.000000".split(":");
 		System.out.println(numberUtil.isDouble(first[1])&&numberUtil.isDouble(second[1]));
 
-		Map<String, String> params = new HashMap<String, String>();//请求参数集合
-		String apikey = "9d97e5a386f8a0d1c9ee2903599679dc";
-		String text = "【QG工作室】拐杖使用者出现摔倒情况，请尽快打开 app 进行救援。";
-		String mobile = "";
-		params.put("apikey", apikey);
-		params.put("text", text);
-		params.put("mobile", mobile);
-		httpClientService.post("https://sms.yunpian.com/v2/sms/batch_send.json",params);
+
 	}
 
 }

@@ -3,7 +3,6 @@ package com.linkai.service.impl;
 import com.linkai.dao.UserRepository;
 import com.linkai.dto.RequestResult;
 import com.linkai.enums.StateEnum;
-import com.linkai.model.PersonToContact;
 import com.linkai.model.User;
 import com.linkai.service.LoginService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
