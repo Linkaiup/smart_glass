@@ -63,7 +63,8 @@ public class LoginServiceImpl implements LoginService {
         Random random = new Random();
         int r = random.nextInt(9999);
         String authCode = String.valueOf(r);
-        log.info("authCode is "+ authCode);
+        log.info("authCode is"+ authCode);
+        log.info("phone is"+phone);
         sendAuthCode(phone,authCode);
         RedisSerializer redisSerializer =new StringRedisSerializer();
         redisTemplate.setKeySerializer(redisSerializer);
@@ -76,7 +77,7 @@ public class LoginServiceImpl implements LoginService {
     public RequestResult compareAuthByPhone(String phone,String authCode){
         ValueOperations<String,Object> vo = redisTemplate.opsForValue();
         String trueCode = (String) vo.get(phone);
-        if (trueCode == authCode){
+        if (trueCode.equals(authCode)){
             return new RequestResult(StateEnum.OK);
         }else {
             return new RequestResult(StateEnum.PASSWORD_ERROR);
@@ -88,7 +89,7 @@ public class LoginServiceImpl implements LoginService {
         //请求参数集合
         Map<String, String> params = new HashMap(3);
         String apikey = "9d97e5a386f8a0d1c9ee2903599679dc";
-        String text = "【QG工作室】您的登录验证码为[" + authCode + "]";
+        String text = "【QG工作室】您的登录验证码为:" + authCode;
         params.put("apikey", apikey);
         params.put("text", text);
         params.put("mobile", phone);
