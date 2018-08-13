@@ -27,6 +27,13 @@ public class GetGprsDetailServiceImpl implements GetGprsDetailService {
         this.gson = gson;
     }
 
+    /**
+     * 通过经纬度获取所处位置的具体信息
+     * @param longitude 经度
+     * @param latitude 纬度
+     * @return
+     * @throws Exception
+     */
     @Override
     public String GetLocationString(float longitude,float latitude) throws Exception{
         String url = "http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location=" + latitude + "," + longitude + "&output=json&pois=1&ak=U6eeOKvjHpNRQG623vWRnamxfRjQsPuA";
@@ -37,8 +44,7 @@ public class GetGprsDetailServiceImpl implements GetGprsDetailService {
             return "所提交经纬度非法！";
         }
         System.out.println("baiduResult is ->"+baiduResult);
-        Map<String ,Object> dataResult;
-        dataResult = (Map<String, Object>) baiduResult.getResult();
+        Map<String ,Object> dataResult = (Map<String, Object>) baiduResult.getResult();
         System.out.println("this is ->"+dataResult);
         String result = dataResult.get("formatted_address").toString();
         if(result.equals("")||result==null)

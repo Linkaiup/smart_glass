@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.linkai.model.AppResult;
 import com.linkai.model.BaiduResult;
 import com.linkai.model.GPRS;
+import com.linkai.service.ContactService;
 import com.linkai.service.impl.GetGprsDetailServiceImpl;
 import com.linkai.service.impl.HttpClientService;
 import com.linkai.util.NumberUtil;
@@ -71,7 +72,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
             String la[] = value[1].split(":");
             float longitude;
             float latitude;
-            if (numberUtil.isDouble(lo[1]) && numberUtil.isDouble(la[1])) {
+
                 longitude = Float.parseFloat(lo[1]);
                 latitude = Float.parseFloat(la[1]);
                 result = getGprsDetailService.GetLocationString(longitude, latitude);
@@ -79,9 +80,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
                 log.info("开始向移动端发送信息:+{0}", new AppResult<>(new GPRS(longitude, latitude,null)));
                 myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(longitude, latitude,"")))));
                 log.info("向移动端发送经纬度信息成功");
-            } else {
-                result = "请求经纬度参数有误！请重新请求！";
-            }
         }else {
             result = "报警成功！";
             myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(23.066790, 113.3857,"help")))));
