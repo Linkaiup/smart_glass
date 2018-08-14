@@ -110,7 +110,8 @@ public class LoginServiceImpl implements LoginService {
     public boolean showWarning(){
         ValueOperations<String,Object> vo = redisTemplate.opsForValue();
         String flag = (String) vo.get("help");
-        if (flag.equals("true")){
+        log.info("flag is:"+flag);
+        if (("true").equals(flag)){
             contactService.deleteWarning();
             return true;
         }else {
