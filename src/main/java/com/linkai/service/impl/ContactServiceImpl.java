@@ -131,7 +131,7 @@ public class ContactServiceImpl implements ContactService {
         redisTemplate.setKeySerializer(redisSerializer);
         ValueOperations<String,Object> vo = redisTemplate.opsForValue();
         //往redis集合中添加键值对
-        vo.set("help",true);
+        vo.set("help","true");
         return true;
     }
 
@@ -142,7 +142,7 @@ public class ContactServiceImpl implements ContactService {
         redisTemplate.setKeySerializer(redisSerializer);
         ValueOperations<String,Object> vo = redisTemplate.opsForValue();
         //往redis集合中添加键值对
-        vo.set("help",false);
+        vo.set("help","false");
         return true;
     }
 }
