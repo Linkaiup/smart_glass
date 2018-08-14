@@ -21,7 +21,9 @@ public enum StateEnum {
     PASSWORD_ERROR(52,"验证码错误"),
     NAME_TOLONG(53,"联系人名称太长"),
     PHONE_TOLONG(54,"电话太长"),
-    CONTACT_NOEXIST(55,"联系人不存在");
+    CONTACT_NOEXIST(55,"联系人不存在"),
+    WARNING(56,"需要报警"),
+    NO_WARNING(57,"不需要报警");
 
     /**
      * 状态码

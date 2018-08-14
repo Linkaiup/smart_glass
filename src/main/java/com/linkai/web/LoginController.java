@@ -42,4 +42,13 @@ public class LoginController {
         }
         return loginService.compareAuthByPhone(map.get("phone"),map.get("authCode"));
     }
+
+    @RequestMapping("/getwarning")
+    public RequestResult showWarning(){
+        if (loginService.showWarning()){
+            return new RequestResult(StateEnum.WARNING);
+        }else {
+            return new RequestResult(StateEnum.NO_WARNING);
+        }
+    }
 }

@@ -101,4 +101,15 @@ public class LoginServiceImpl implements LoginService {
         httpClientService.post("https://sms.yunpian.com/v2/sms/batch_send.json",params);
         return true;
     }
+
+    @Override
+    public boolean showWarning(){
+        ValueOperations<String,Object> vo = redisTemplate.opsForValue();
+        boolean flag = (Boolean) vo.get("help");
+        if (flag){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

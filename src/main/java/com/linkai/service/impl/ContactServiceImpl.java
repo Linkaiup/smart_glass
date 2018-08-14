@@ -8,8 +8,13 @@ import com.linkai.model.PersonToContact;
 import com.linkai.service.ContactService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +34,8 @@ public class ContactServiceImpl implements ContactService {
     private PersonToContactRepository personToContactRepository;
     @Autowired
     private HttpClientService httpClientService;
+    @Resource
+    private RedisTemplate<String,Object> redisTemplate;
 
     @Override
     public RequestResult addPersonToContact(Map<String, String> map) {
@@ -114,6 +121,28 @@ public class ContactServiceImpl implements ContactService {
         params.put("text", text);
         params.put("mobile", mobile);
         httpClientService.post("https://sms.yunpian.com/v2/sms/batch_send.json",params);
+        return true;
+    }
+
+    @Override
+    public boolean saveWarning(){
+        //初始化redis集合
+        RedisSerializer redisSerializer =new StringRedisSerializer();
+        redisTemplate.setKeySerializer(redisSerializer);
+        ValueOperations<String,Object> vo = redisTemplate.opsForValue();
+        //往redis集合中添加键值对
+        vo.set("help",true);
+        return true;
+    }
+
+    @Override
+    public boolean deleteWarning(){
+        //初始化redis集合
+        RedisSerializer redisSerializer =new StringRedisSerializer();
+        redisTemplate.setKeySerializer(redisSerializer);
+        ValueOperations<String,Object> vo = redisTemplate.opsForValue();
+        //往redis集合中添加键值对
+        vo.set("help",false);
         return true;
     }
 }
