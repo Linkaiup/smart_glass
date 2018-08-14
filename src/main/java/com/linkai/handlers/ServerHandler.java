@@ -82,18 +82,18 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
                 log.info("向移动端发送经纬度信息成功");
         }else {
             result = "报警成功！";
-            myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(23.066790, 113.3857,"help")))));
             log.info("向移动端发送报警信息成功");
             if (myWebSocketHandler.exist("gid")){
-                if (contactService.sendWarning()){
-                    log.info("报警短信发送成功");
-                }else {
-                    log.info("报警短信发送失败");
-                }
+                myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(23.066790, 113.3857,"help")))));
             }else {
                 if (contactService.saveWarning()){
                     log.info("报警信息保存成功");
                 }
+            }
+            if (contactService.sendWarning()){
+                log.info("报警短信发送成功");
+            }else {
+                log.info("报警短信发送失败");
             }
         }
         /**
