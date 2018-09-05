@@ -40,4 +40,10 @@ public interface LoginService {
      * @return
      */
     boolean sendAuthCode(String phone,String authCode);
+
+    /**
+     * 展示报警信息
+     * @return
+     */
+    boolean showWarning();
 }

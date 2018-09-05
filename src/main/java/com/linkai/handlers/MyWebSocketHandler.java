@@ -158,4 +158,17 @@ public class MyWebSocketHandler implements WebSocketHandler {
         }
     }
 
+    /**
+     * 判断名称为 gid 的客户是否连接
+     * @param gid
+     * @return
+     */
+    public boolean exist(String gid){
+        WebSocketSession session = users.get(gid);
+        if (session != null && session.isOpen()){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

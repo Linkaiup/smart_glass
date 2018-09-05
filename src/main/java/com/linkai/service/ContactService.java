@@ -44,4 +44,16 @@ public interface ContactService {
      * @return
      */
     boolean sendWarning();
+
+    /**
+     * 保存报警信息，等待app打开时报警
+     * @return boolean
+     */
+    boolean saveWarning();
+
+    /**
+     * 删除缓存的报警信息
+     * @return boolean
+     */
+    boolean deleteWarning();
 }

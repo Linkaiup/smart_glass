@@ -4,6 +4,7 @@ import com.linkai.dao.UserRepository;
 import com.linkai.dto.RequestResult;
 import com.linkai.enums.StateEnum;
 import com.linkai.model.User;
+import com.linkai.service.ContactService;
 import com.linkai.service.LoginService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,8 @@ public class LoginServiceImpl implements LoginService {
     private RedisTemplate<String,Object> redisTemplate;
     @Autowired
     private HttpClientService httpClientService;
+    @Autowired
+    private ContactService contactService;
 
     @Override
     public RequestResult login(Map<String,String> map){
@@ -101,5 +104,18 @@ public class LoginServiceImpl implements LoginService {
         params.put("mobile", phone);
         httpClientService.post("https://sms.yunpian.com/v2/sms/batch_send.json",params);
         return true;
+    }
+
+    @Override
+    public boolean showWarning(){
+        ValueOperations<String,Object> vo = redisTemplate.opsForValue();
+        String flag = (String) vo.get("help");
+        log.info("flag is:"+flag);
+        if (("true").equals(flag)){
+            contactService.deleteWarning();
+            return true;
+        }else {
+            return false;
+        }
     }
 }
