@@ -104,7 +104,7 @@ public class ContactServiceImpl implements ContactService {
         Map<String, String> params = new HashMap(3);
         String apikey = "9d97e5a386f8a0d1c9ee2903599679dc";
         String text = "【QG工作室】拐杖使用者出现摔倒情况，请尽快打开 app 进行救援。";
-        String mobile = null;
+        String mobile = "";
         List<PersonToContact> personToContacts = personToContactRepository.findAll();
         for (PersonToContact personToContact : personToContacts) {
             mobile += personToContact.getPhone();
