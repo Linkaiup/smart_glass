@@ -2,7 +2,10 @@ package com.linkai.web;
 
 import com.linkai.dto.RequestResult;
 import com.linkai.enums.StateEnum;
+import com.linkai.model.AppResult;
+import com.linkai.model.GPRS;
 import com.linkai.service.LoginService;
+import com.linkai.service.impl.GetGprsDetailServiceImpl;
 import com.linkai.service.impl.LoginServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,8 @@ public class LoginController {
 
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private GetGprsDetailServiceImpl getGprsDetailService;
 
     @RequestMapping("/request")
     public RequestResult requestAuthCode(@RequestBody  Map<String,String> map){
@@ -46,9 +51,12 @@ public class LoginController {
     @RequestMapping("/getwarning")
     public RequestResult showWarning(){
         if (loginService.showWarning()){
-            return new RequestResult(StateEnum.WARNING);
+            float latitude = getGprsDetailService.getLatitude();
+            float longitude = getGprsDetailService.getLongitude();
+            long time = getGprsDetailService.getWarningTime();
+            return new RequestResult<>(StateEnum.WARNING,new GPRS(latitude, longitude,"help",time));
         }else {
-            return new RequestResult(StateEnum.NO_WARNING);
+            return new RequestResult<>(StateEnum.NO_WARNING,null);
         }
     }
 }

@@ -5,8 +5,11 @@ import com.linkai.handlers.MyWebSocketHandler;
 import com.linkai.model.BaiduResult;
 import com.linkai.service.GetGprsDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +23,9 @@ import java.util.Map;
 public class GetGprsDetailServiceImpl implements GetGprsDetailService {
     private final HttpClientService httpClientService;
     private final Gson gson;
+
+    @Resource
+    private RedisTemplate<String,Object> redisTemplate;
 
     @Autowired(required = false)
     public GetGprsDetailServiceImpl(HttpClientService httpClientService,Gson gson) {
@@ -60,4 +66,35 @@ public class GetGprsDetailServiceImpl implements GetGprsDetailService {
 
         return true;
     }
+
+    @Override
+    public void savePositionAndTime(float longitude,float latitude,float time){
+        ValueOperations<String,Object> vo = redisTemplate.opsForValue();
+        //往redis集合中添加键值对
+        vo.set("longitude",longitude);
+        vo.set("latitude",latitude);
+        vo.set("time",time);
+    }
+
+    @Override
+    public float getLatitude(){
+        ValueOperations<String,Object> vo = redisTemplate.opsForValue();
+        //往redis集合中添加键值对
+        return (float)vo.get("latitude");
+    }
+
+    @Override
+    public float getLongitude(){
+        ValueOperations<String,Object> vo = redisTemplate.opsForValue();
+        //往redis集合中添加键值对
+        return (float)vo.get("longitude");
+    }
+
+    @Override
+    public long getWarningTime(){
+        ValueOperations<String,Object> vo = redisTemplate.opsForValue();
+        //往redis集合中添加键值对
+        return (long)vo.get("time");
+    }
+
 }

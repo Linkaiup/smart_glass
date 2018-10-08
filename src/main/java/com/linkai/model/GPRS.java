@@ -25,4 +25,9 @@ public class GPRS {
      * 报警信息
      */
     private String info;
+
+    /**
+     * 报警时间戳
+     */
+    private long warningTime;
 }

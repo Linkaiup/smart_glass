@@ -83,9 +83,8 @@ public class ContactServiceImpl implements ContactService {
             personData.put("phone", personToContact.getPhone());
             personLists.add(personData);
         }
-        personList.put("personLists", personLists);
         log.info("展示所有联系人");
-        return new RequestResult<>(StateEnum.OK, personList);
+        return new RequestResult<>(StateEnum.OK, personLists);
     }
 
     @Override
