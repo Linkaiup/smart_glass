@@ -65,9 +65,12 @@ public class LoginServiceImpl implements LoginService {
         if (phone == null){
             return new RequestResult(StateEnum.EMPTY);
         }
-        //生成0-9999以内的随机数
+        //生成1000-9999以内的随机数
+        int max = 9999;
+        int min = 1000;
         Random random = new Random();
-        int r = random.nextInt(9999);
+        //首先生成0-9999的随机数，然后对(9999-1000+1)取模得到[0-1000]之间的随机数，然后加上min=1000，最后生成的是1000-9999的随机数
+        int r = random.nextInt(max)%(max-min+1) + min;
         //将随机数转成字符串
         String authCode = String.valueOf(r);
         log.info("authCode is"+ authCode);
