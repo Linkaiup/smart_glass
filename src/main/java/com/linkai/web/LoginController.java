@@ -59,4 +59,14 @@ public class LoginController {
             return new RequestResult<>(StateEnum.NO_WARNING,null);
         }
     }
+
+    @RequestMapping("/positionstream")
+    public RequestResult showPositionStream(){
+        return loginService.showPositionStream();
+    }
+
+    @RequestMapping("/warnpointstream")
+    public RequestResult showWarningPointStream(){
+        return loginService.showWarningPointStream();
+    }
 }

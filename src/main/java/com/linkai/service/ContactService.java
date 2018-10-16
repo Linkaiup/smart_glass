@@ -56,6 +56,4 @@ public interface ContactService {
      * @return boolean
      */
     boolean deleteWarning();
-
-
 }

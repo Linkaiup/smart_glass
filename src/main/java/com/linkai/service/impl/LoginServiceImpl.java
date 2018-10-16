@@ -3,6 +3,8 @@ package com.linkai.service.impl;
 import com.linkai.dao.UserRepository;
 import com.linkai.dto.RequestResult;
 import com.linkai.enums.StateEnum;
+import com.linkai.model.GPRS;
+import com.linkai.model.PersonToContact;
 import com.linkai.model.User;
 import com.linkai.service.ContactService;
 import com.linkai.service.LoginService;
@@ -15,9 +17,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author K Lin
@@ -33,6 +33,8 @@ public class LoginServiceImpl implements LoginService {
     private UserRepository userRepository;
     @Resource
     private RedisTemplate<String,Object> redisTemplate;
+    @Resource
+    private RedisTemplate<String,GPRS> redisTemplateForGPRS;
     @Autowired
     private HttpClientService httpClientService;
     @Autowired
@@ -119,6 +121,40 @@ public class LoginServiceImpl implements LoginService {
             return true;
         }else {
             return false;
+        }
+    }
+
+    @Override
+    public RequestResult showPositionStream(){
+        String key = "gprs";
+        boolean hasKey = redisTemplateForGPRS.hasKey(key);
+        if (hasKey) {
+            //途径路线数据
+            log.info("展示途径路线数据");
+            List<GPRS> positionStream = redisTemplateForGPRS.opsForList().range(key, 0,redisTemplate.opsForList().size(key)-1);
+
+            redisTemplateForGPRS.delete(key);
+            log.info("删除途径路线的数据");
+            return new RequestResult<>(StateEnum.OK, positionStream);
+        }else {
+            return new RequestResult<>(StateEnum.NO_DATA);
+        }
+    }
+
+    @Override
+    public RequestResult showWarningPointStream(){
+        String key = "gprswarning";
+        boolean hasKey = redisTemplateForGPRS.hasKey(key);
+        if (hasKey) {
+            log.info("展示报警途径路线数据");
+            //途径路线数据
+            List<GPRS> warnPointStream = redisTemplateForGPRS.opsForList().range(key, 0,redisTemplate.opsForList().size(key)-1);
+
+            log.info("删除报警途径路线的数据");
+            redisTemplateForGPRS.delete(key);
+            return new RequestResult<>(StateEnum.OK, warnPointStream);
+        }else {
+            return new RequestResult<>(StateEnum.NO_DATA);
         }
     }
 }

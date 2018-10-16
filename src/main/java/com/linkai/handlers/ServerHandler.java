@@ -68,38 +68,54 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
         String help = "help";
         float longitude;
         float latitude;
+        long messageTime;
         Timestamp timestamp= Timestamp.valueOf(LocalDateTime.now());
-        if(!(help).equals(msg)) {
-            //开始切分字符串
+        messageTime = timestamp.getTime();
+        if(!(msg).contains(help)) {
+            //开始切分字符串,格式：lo:23.77,la:133.22
             String[] value = msg.split(",");
-            System.out.println("lo=" + value[0]);
-            System.out.println("la=" + value[1]);
+            log.info("lo=" + value[0]);
+            log.info("la=" + value[1]);
             String lo[] = value[0].split(":");
             String la[] = value[1].split(":");
             longitude = Float.parseFloat(lo[1]);
             latitude = Float.parseFloat(la[1]);
+            GPRS gprs = new GPRS(longitude, latitude, "", messageTime);
             if (0.000000==longitude || 0.000000==latitude){
                 log.info("经纬度不正常，不做任何操作");
             }else {
                 result = getGprsDetailService.GetLocationString(longitude, latitude);
                 //发送给移动端的 GPRS 点
-                log.info("开始向移动端发送信息:+{0}", new AppResult<>(new GPRS(longitude, latitude, null,timestamp.getTime())));
-                myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(longitude, latitude, "",timestamp.getTime())))));
-                log.info("向移动端发送经纬度信息成功");
+                if (myWebSocketHandler.exist("gid")) {
+                    log.info("开始向移动端发送信息:+{0}", new AppResult<>(gprs));
+                    myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(gprs))));
+                    log.info("向移动端发送经纬度信息成功");
+                }else {
+                    //将途径点位置信息保存起来
+                    getGprsDetailService.savePosition(longitude,latitude,messageTime);
+                }
                 //实时更新最后一个经纬度的信息
-                getGprsDetailService.savePositionAndTime(longitude,latitude,timestamp.getTime());
+                getGprsDetailService.savePositionAndTime(longitude,latitude,messageTime);
             }
         }else {
+            //开始切分字符串,格式：help!lo:23.77,la:133.22
+            String[] value = msg.split("!");
+            System.out.println("msg=" + value[1]);
+            String valueTrue[] = value[1].split(",");
+            String lo[] = valueTrue[0].split(":");
+            String la[] = valueTrue[1].split(":");
+            longitude = Float.parseFloat(lo[1]);
+            latitude = Float.parseFloat(la[1]);
             result = "报警成功！";
             log.info("向移动端发送报警信息成功");
-            latitude = getGprsDetailService.getLatitude();
-            longitude = getGprsDetailService.getLongitude();
             if (myWebSocketHandler.exist("gid")){
-                myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(latitude, longitude,"help",timestamp.getTime())))));
+                myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(latitude, longitude,"help",messageTime)))));
             }else {
                 if (contactService.saveWarning()){
-                    log.info("报警信息保存成功");
+                    log.info("最后一个点的报警信息保存成功");
                 }
+                //将所有报警点的位置信息保存起来
+                getGprsDetailService.saveWarningPoint(longitude,latitude,messageTime);
             }
             if (contactService.sendWarning()){
                 log.info("报警短信发送成功");

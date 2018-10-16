@@ -23,7 +23,8 @@ public enum StateEnum {
     PHONE_TOLONG(54,"电话太长"),
     CONTACT_NOEXIST(55,"联系人不存在"),
     WARNING(56,"需要报警"),
-    NO_WARNING(57,"不需要报警");
+    NO_WARNING(57,"不需要报警"),
+    NO_DATA(58,"没有途经路线数据");
 
     /**
      * 状态码

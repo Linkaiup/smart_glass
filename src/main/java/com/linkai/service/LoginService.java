@@ -46,4 +46,16 @@ public interface LoginService {
      * @return
      */
     boolean showWarning();
+
+    /**
+     * 展示途径路线数据
+     * @return
+     */
+    RequestResult showPositionStream();
+
+    /**
+     * 展示途经的报警路线数据
+     * @return
+     */
+    RequestResult showWarningPointStream();
 }

@@ -14,7 +14,7 @@ public interface GetGprsDetailService {
     /**
      * 保存最后出现的位置信息
      */
-    void savePositionAndTime(float longitude,float latitude,float time);
+    void savePositionAndTime(float longitude,float latitude,long time);
 
     /**
      * 获取最后出现的纬度
@@ -33,4 +33,14 @@ public interface GetGprsDetailService {
      * @return
      */
     long getWarningTime();
+
+    /**
+     * 离线时保存每个点的位置
+     */
+    void savePosition(float longitude,float latitude,long messageTime);
+
+    /**
+     * 离线时报警的每个点的位置
+     */
+    void saveWarningPoint(float longitude,float latitude,long messageTime);
 }

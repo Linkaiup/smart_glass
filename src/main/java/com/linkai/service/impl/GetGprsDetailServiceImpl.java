@@ -3,6 +3,7 @@ package com.linkai.service.impl;
 import com.google.gson.Gson;
 import com.linkai.handlers.MyWebSocketHandler;
 import com.linkai.model.BaiduResult;
+import com.linkai.model.GPRS;
 import com.linkai.service.GetGprsDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,7 +27,15 @@ public class GetGprsDetailServiceImpl implements GetGprsDetailService {
     private final Gson gson;
 
     @Resource
+    private RedisTemplate<String,String> stringRedisTemplate;
+
+    @Resource
     private RedisTemplate<String,Object> redisTemplate;
+
+    @Resource
+    private RedisTemplate<String,GPRS> redisTemplateForGPRS;
+
+
 
     @Autowired(required = false)
     public GetGprsDetailServiceImpl(HttpClientService httpClientService,Gson gson) {
@@ -68,7 +78,7 @@ public class GetGprsDetailServiceImpl implements GetGprsDetailService {
     }
 
     @Override
-    public void savePositionAndTime(float longitude,float latitude,float time){
+    public void savePositionAndTime(float longitude,float latitude,long time){
         ValueOperations<String,Object> vo = redisTemplate.opsForValue();
         //往redis集合中添加键值对
         vo.set("longitude",longitude);
@@ -97,4 +107,15 @@ public class GetGprsDetailServiceImpl implements GetGprsDetailService {
         return (long)vo.get("time");
     }
 
+    @Override
+    public void savePosition(float longitude,float latitude,long messageTime){
+        GPRS gprs = new GPRS(longitude, latitude, "", messageTime);
+        redisTemplateForGPRS.opsForList().rightPush("gprs", gprs);
+    }
+
+    @Override
+    public void saveWarningPoint(float longitude,float latitude,long messageTime){
+        GPRS gprs = new GPRS(longitude, latitude, "help", messageTime);
+        redisTemplateForGPRS.opsForList().rightPush("gprswarning", gprs);
+    }
 }
