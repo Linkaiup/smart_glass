@@ -109,7 +109,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<String> {
             result = "报警成功！";
             log.info("向移动端发送报警信息成功");
             if (myWebSocketHandler.exist("gid")){
-                myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(latitude, longitude,"help",messageTime)))));
+                myWebSocketHandler.sendMessageToUser("gid", new TextMessage(gson.toJson(new AppResult<>(new GPRS(longitude, latitude,"help",messageTime)))));
             }else {
                 if (contactService.saveWarning()){
                     log.info("最后一个点的报警信息保存成功");
